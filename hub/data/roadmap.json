@@ -1,0 +1,64 @@
+{
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Foundation",
+      "weeks": "1–3",
+      "description": "Repo setup, team contracts, design system decisions, data file review, component wireframes.",
+      "status": "in_progress",
+      "milestones": [
+        "All teams have GitHub access and can push to their branch",
+        "Shared design tokens agreed on (Team 1 leads)",
+        "Instructor data files reviewed and documented in /shared/data/",
+        "Team 3 match output format defined and agreed",
+        "All teams have initial wireframes or component sketches"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Build",
+      "weeks": "4–7",
+      "description": "Core component development. Each team builds their piece. Weekly status updates required.",
+      "status": "not_started",
+      "milestones": [
+        "Components individually functional with sample data",
+        "Cross-team data contracts tested (Team 2 → Team 3 → Team 4 → Team 5)",
+        "Accessibility review with Edward Laba",
+        "Team 1 style guide published and all components compliant"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Integration",
+      "weeks": "8",
+      "description": "Components wired together. End-to-end flow tested. Bugs surfaced and triaged.",
+      "status": "not_started",
+      "milestones": [
+        "Full user flow works start to finish",
+        "No blocked states between components",
+        "Final accessibility pass",
+        "Handoff docs written"
+      ]
+    },
+    {
+      "id": "phase4",
+      "name": "Handoff",
+      "weeks": "9",
+      "description": "Teams switch components. Outgoing team leaves component in a state the next team can trust.",
+      "status": "not_started",
+      "milestones": [
+        "All status.json files show complete or handoff_notes written",
+        "Each component runs locally with a fresh clone",
+        "Incoming team makes their first commit"
+      ]
+    },
+    {
+      "id": "phase5",
+      "name": "Second Component",
+      "weeks": "9–end",
+      "description": "Teams build their second assigned component. Same rhythm as Phase 2.",
+      "status": "not_started",
+      "milestones": []
+    }
+  ]
+}

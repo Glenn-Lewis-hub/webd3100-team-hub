@@ -1,0 +1,12 @@
+{
+  "team": "Team 3 — Career Matching Results",
+  "owner": "TBD",
+  "week": 1,
+  "status": "not_started",
+  "done": [],
+  "in_progress": [],
+  "next": ["Team kickoff", "Review occupation data files in /shared/data/", "Define output data shape for Team 4 and Team 5"],
+  "blockers": [],
+  "notes": "Teams 4 and 5 depend on the match output format. Define this early.",
+  "updated": "2026-10-01"
+}

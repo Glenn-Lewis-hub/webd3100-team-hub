@@ -1,0 +1,34 @@
+{
+  "teams": [
+    {
+      "id": "team1-shell",
+      "name": "App Shell & Navigation",
+      "color": "#3b82f6",
+      "status_url": ""
+    },
+    {
+      "id": "team2-profile",
+      "name": "Profile & Intake",
+      "color": "#8b5cf6",
+      "status_url": ""
+    },
+    {
+      "id": "team3-matching",
+      "name": "Career Matching Results",
+      "color": "#10b981",
+      "status_url": ""
+    },
+    {
+      "id": "team4-nextstep",
+      "name": "Next Step Recommendation",
+      "color": "#f59e0b",
+      "status_url": ""
+    },
+    {
+      "id": "team5-lookforward",
+      "name": "Lookforward & Outcome",
+      "color": "#e96c5a",
+      "status_url": "https://raw.githubusercontent.com/Glenn-Lewis-hub/career-quiz/main/team5-lookforward/status.json"
+    }
+  ]
+}

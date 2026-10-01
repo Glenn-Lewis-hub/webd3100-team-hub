@@ -1,0 +1,12 @@
+{
+  "team": "Team 4 — Next Step Recommendation",
+  "owner": "TBD",
+  "week": 1,
+  "status": "not_started",
+  "done": [],
+  "in_progress": [],
+  "next": ["Team kickoff", "Coordinate with Team 3 on match output format"],
+  "blockers": ["Waiting on Team 3 to define match data shape"],
+  "notes": "",
+  "updated": "2026-10-01"
+}

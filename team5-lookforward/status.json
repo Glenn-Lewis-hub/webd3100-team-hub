@@ -1,0 +1,12 @@
+{
+  "team": "Team 5 — Lookforward & Outcome Projection",
+  "owner": "Glenn Lewis",
+  "week": 1,
+  "status": "in_progress",
+  "done": ["Repo scaffolded", "Hub dashboard built", "Coordination plan written"],
+  "in_progress": ["Reviewing occupation data files", "Designing before/after comparison view"],
+  "next": ["Coordinate with Team 3 on match output format", "Sketch wage/outlook data display"],
+  "blockers": ["Waiting on instructor data files", "Waiting on Team 3 match output shape"],
+  "notes": "Component consumes Team 3's match results. Need to agree on data contract before building display logic.",
+  "updated": "2026-10-01"
+}

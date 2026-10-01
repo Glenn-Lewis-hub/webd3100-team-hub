@@ -1,0 +1,16 @@
+{
+  "updates": [
+    {
+      "week": 1,
+      "date": "2026-10-01",
+      "title": "Week 1 — Kickoff",
+      "video_url": "",
+      "summary": "Repo scaffolded. Teams assigned. Hub live. First priority: all teams confirm GitHub access and update their status.json.",
+      "decisions": [
+        "Each team owns their folder — no PRs touching other team folders",
+        "Team 3 to define match output data shape by Week 2 so Teams 4 and 5 can plan against it",
+        "Weekly update video posted each Monday"
+      ]
+    }
+  ]
+}

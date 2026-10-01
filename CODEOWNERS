@@ -1,0 +1,18 @@
+# CODEOWNERS — NextStep Career Quiz
+# Only the listed owner can approve PRs that touch their folder.
+# All merges to main require at least one approval from the relevant owner.
+
+# Hub and repo root — Glenn owns
+/hub/                   @Glenn-Lewis-hub
+/shared/                @Glenn-Lewis-hub
+/CODEOWNERS             @Glenn-Lewis-hub
+/README.md              @Glenn-Lewis-hub
+/PLAN.md                @Glenn-Lewis-hub
+
+# Team folders — each team owns their own
+# Replace @TBD-* with actual GitHub usernames when teammates share them
+/team1-shell/           @TBD-team1
+/team2-profile/         @TBD-team2
+/team3-matching/        @TBD-team3
+/team4-nextstep/        @TBD-team4
+/team5-lookforward/     @Glenn-Lewis-hub

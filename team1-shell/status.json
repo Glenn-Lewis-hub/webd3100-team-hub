@@ -1,0 +1,12 @@
+{
+  "team": "Team 1 — App Shell & Navigation",
+  "owner": "TBD",
+  "week": 1,
+  "status": "not_started",
+  "done": [],
+  "in_progress": [],
+  "next": ["Team kickoff", "Review shared design tokens in /shared/design/"],
+  "blockers": [],
+  "notes": "",
+  "updated": "2026-10-01"
+}

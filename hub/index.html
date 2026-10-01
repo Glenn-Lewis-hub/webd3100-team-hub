@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NextStep — Team Hub</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1b2a;
+  --surface:#111f2e;
+  --card:#162233;
+  --border:#1f3349;
+  --border-mid:#2e4f6e;
+  --text:#e8edf2;
+  --text-dim:#8fa3b8;
+  --text-muted:#5a7a96;
+  --accent:#e96c5a;
+  --t1:#3b82f6;
+  --t2:#8b5cf6;
+  --t3:#10b981;
+  --t4:#f59e0b;
+  --t5:#e96c5a;
+}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:4rem}
+a{color:inherit;text-decoration:none}
+
+/* ── Header ── */
+.hub-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;position:sticky;top:0;z-index:100}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .6rem;border-radius:20px;margin-bottom:.35rem}
+.hub-header h1{font-size:1.15rem;font-weight:800}
+.hub-header p{font-size:.75rem;color:var(--text-dim)}
+.hub-links{display:flex;gap:.4rem;flex-wrap:wrap}
+.hub-links a,.hub-links span{font-size:.7rem;padding:.28rem .65rem;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);transition:background .12s,color .12s}
+.hub-links a:hover{background:var(--card);color:var(--text)}
+.hub-links .dim{opacity:.35;pointer-events:none;cursor:default}
+
+/* ── Layout ── */
+.main{max-width:900px;margin:0 auto;padding:1.5rem 1rem}
+.section-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:.75rem;padding-left:.15rem}
+.section{margin-bottom:2.5rem}
+
+/* ── Team grid ── */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.75rem}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.team-card-bar{height:3px}
+.team-card-body{padding:.9rem 1rem}
+.team-name{font-size:.88rem;font-weight:700;margin-bottom:.15rem}
+.team-owner{font-size:.72rem;color:var(--text-dim);margin-bottom:.6rem}
+.status-badge{display:inline-block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.18rem .55rem;border-radius:20px;margin-bottom:.75rem}
+.s-not_started{background:#1e2d3d;color:var(--text-muted)}
+.s-in_progress{background:#1e3a5f;color:#60a5fa}
+.s-review{background:#3d2e00;color:#fbbf24}
+.s-blocked{background:#3d1010;color:#f87171}
+.s-complete{background:#0d3320;color:#34d399}
+.team-section-head{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.3rem;margin-top:.6rem}
+.item-list{list-style:none;padding:0}
+.item-list li{font-size:.77rem;color:var(--text-dim);padding:.18rem 0;padding-left:.9rem;position:relative}
+.item-list li::before{content:"·";position:absolute;left:.1rem;color:var(--text-muted)}
+.item-list.blockers li{color:#f87171}
+.item-list.blockers li::before{color:#f87171}
+.team-updated{font-size:.65rem;color:var(--text-muted);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.team-notes{font-size:.75rem;color:var(--text-dim);font-style:italic;margin-top:.5rem;padding:.5rem .65rem;background:rgba(255,255,255,.03);border-left:2px solid var(--border-mid);border-radius:0 4px 4px 0}
+
+/* ── Roadmap ── */
+.roadmap{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.5rem}
+.phase{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.75rem .9rem}
+.phase.active{border-color:var(--accent)}
+.phase-weeks{font-size:.62rem;color:var(--text-muted);margin-bottom:.25rem}
+.phase-name{font-size:.85rem;font-weight:700;margin-bottom:.3rem}
+.phase-desc{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+.phase-status{display:inline-block;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .45rem;border-radius:10px;margin-top:.5rem}
+
+/* ── Updates ── */
+.update-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:.6rem}
+.update-head{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.4rem;flex-wrap:wrap}
+.update-title{font-size:.9rem;font-weight:700}
+.update-date{font-size:.7rem;color:var(--text-muted)}
+.update-summary{font-size:.8rem;color:var(--text-dim);margin-bottom:.65rem;line-height:1.5}
+.update-decisions{list-style:none;padding:0}
+.update-decisions li{font-size:.76rem;color:var(--text-dim);padding:.2rem 0;padding-left:1rem;position:relative}
+.update-decisions li::before{content:"✓";position:absolute;left:0;color:#34d399;font-size:.7rem}
+.video-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:.3rem .7rem;margin-bottom:.65rem;opacity:.7}
+.video-link:hover{opacity:1}
+
+/* ── Pending card ── */
+.pending-card{opacity:.7}
+.pending-owner{font-size:.72rem;color:var(--text-muted);font-style:italic;margin-bottom:.6rem}
+.pending-msg{font-size:.74rem;color:var(--text-muted);margin-top:.5rem;line-height:1.5}
+.pending-msg code{font-size:.72rem;background:rgba(255,255,255,.06);padding:.1rem .35rem;border-radius:4px}
+
+/* ── Loading / error ── */
+.loading{color:var(--text-muted);font-size:.8rem;padding:.5rem 0}
+.load-error{color:#f87171;font-size:.75rem;padding:.4rem 0}
+
+/* ── Footer ── */
+footer{text-align:center;font-size:.65rem;color:#3d5467;margin-top:2rem}
+</style>
+</head>
+<body>
+
+<header class="hub-header">
+  <div>
+    <div class="badge">WEBD3100 · NSCC Fall 2026</div>
+    <h1>NextStep — Team Hub</h1>
+    <p>Bill Kowalski &nbsp;·&nbsp; Five-team coordination dashboard</p>
+  </div>
+  <nav class="hub-links" aria-label="Quick links">
+    <a href="https://nscconline.brightspace.com/d2l/home/392811" target="_blank" rel="noopener">Brightspace</a>
+    <span class="dim" id="lnk-github" title="GitHub repo not yet set">GitHub</span>
+    <span class="dim" id="lnk-figma" title="Figma not yet set">Figma</span>
+    <a href="../shared/design/" id="lnk-design">Style Guide</a>
+    <a href="../PLAN.md" id="lnk-plan">Plan</a>
+  </nav>
+</header>
+
+<main class="main">
+
+  <!-- ── Team status ── -->
+  <section class="section" aria-labelledby="teams-heading">
+    <div class="section-label" id="teams-heading">Team Status</div>
+    <div class="team-grid" id="team-grid" role="list" aria-live="polite" aria-label="Team status cards">
+      <p class="loading" aria-live="polite">Loading team status…</p>
+    </div>
+  </section>
+
+  <!-- ── Roadmap ── -->
+  <section class="section" aria-labelledby="roadmap-heading">
+    <div class="section-label" id="roadmap-heading">Project Roadmap</div>
+    <div class="roadmap" id="roadmap-rail" role="list" aria-label="Project phases">
+      <p class="loading">Loading roadmap…</p>
+    </div>
+  </section>
+
+  <!-- ── Weekly updates ── -->
+  <section class="section" aria-labelledby="updates-heading">
+    <div class="section-label" id="updates-heading">Weekly Updates</div>
+    <div id="updates-list">
+      <p class="loading">Loading updates…</p>
+    </div>
+  </section>
+
+</main>
+
+<footer id="hub-footer">NextStep Team Hub · loaded <span id="load-time"></span></footer>
+
+<script>
+'use strict';
+
+// Teams loaded from data/teams.json — edit that file to add status_url for each team.
+
+const STATUS_LABEL = {
+  not_started: 'Not started',
+  in_progress:  'In progress',
+  review:       'In review',
+  blocked:      'Blocked',
+  complete:     'Complete',
+};
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function statusBadge(s) {
+  return `<span class="status-badge s-${esc(s)}">${esc(STATUS_LABEL[s] ?? s)}</span>`;
+}
+
+function itemList(arr, cls = '') {
+  if (!arr || !arr.length) return '';
+  const items = arr.map(i => `<li>${esc(i)}</li>`).join('');
+  return `<ul class="item-list ${cls}" role="list">${items}</ul>`;
+}
+
+function renderTeamCard(data, color) {
+  const hasDone      = data.done?.length;
+  const hasProgress  = data.in_progress?.length;
+  const hasNext      = data.next?.length;
+  const hasBlockers  = data.blockers?.length;
+
+  return `
+    <article class="team-card" role="listitem" aria-label="${esc(data.team)}">
+      <div class="team-card-bar" style="background:${color}" aria-hidden="true"></div>
+      <div class="team-card-body">
+        <div class="team-name">${esc(data.team)}</div>
+        <div class="team-owner">${esc(data.owner)}</div>
+        ${statusBadge(data.status)}
+        ${hasDone      ? `<div class="team-section-head">Done</div>${itemList(data.done)}`               : ''}
+        ${hasProgress  ? `<div class="team-section-head">In progress</div>${itemList(data.in_progress)}` : ''}
+        ${hasNext      ? `<div class="team-section-head">Up next</div>${itemList(data.next)}`            : ''}
+        ${hasBlockers  ? `<div class="team-section-head">Blockers</div>${itemList(data.blockers, 'blockers')}` : ''}
+        ${data.notes   ? `<p class="team-notes">${esc(data.notes)}</p>`                                 : ''}
+        <div class="team-updated">Week ${esc(String(data.week))} · updated ${esc(data.updated)}</div>
+      </div>
+    </article>`;
+}
+
+function renderPhase(p) {
+  const isActive = p.status === 'in_progress';
+  return `
+    <article class="phase${isActive ? ' active' : ''}" role="listitem" aria-label="Phase: ${esc(p.name)}">
+      <div class="phase-weeks">Weeks ${esc(p.weeks)}</div>
+      <div class="phase-name">${esc(p.name)}</div>
+      <div class="phase-desc">${esc(p.description)}</div>
+      <span class="phase-status s-${esc(p.status)}">${esc(STATUS_LABEL[p.status] ?? p.status)}</span>
+    </article>`;
+}
+
+function renderUpdate(u) {
+  const videoBtn = u.video_url
+    ? `<a class="video-link" href="${esc(u.video_url)}" target="_blank" rel="noopener" aria-label="Watch Week ${esc(String(u.week))} update video">▶ Watch update video</a>`
+    : '<span class="video-link" style="opacity:.3;pointer-events:none" aria-label="Video not yet posted">▶ Video not yet posted</span>';
+
+  const decisions = (u.decisions?.length)
+    ? `<div class="team-section-head" style="margin-top:.5rem">Decisions</div>
+       <ul class="update-decisions" role="list">${u.decisions.map(d => `<li>${esc(d)}</li>`).join('')}</ul>`
+    : '';
+
+  return `
+    <article class="update-card" aria-label="Week ${esc(String(u.week))} update">
+      <div class="update-head">
+        <span class="update-title">${esc(u.title)}</span>
+        <span class="update-date">${esc(u.date)}</span>
+      </div>
+      ${videoBtn}
+      <p class="update-summary">${esc(u.summary)}</p>
+      ${decisions}
+    </article>`;
+}
+
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+  return r.json();
+}
+
+function renderPendingCard(team) {
+  return `
+    <article class="team-card pending-card" role="listitem" aria-label="${esc(team.name)} — not connected">
+      <div class="team-card-bar" style="background:${esc(team.color)}" aria-hidden="true"></div>
+      <div class="team-card-body">
+        <div class="team-name">${esc(team.name)}</div>
+        <div class="team-owner pending-owner">Waiting for link…</div>
+        <span class="status-badge s-not_started">Not connected</span>
+        <p class="pending-msg">Share your <code>status.json</code> raw URL with Glenn to appear here.</p>
+      </div>
+    </article>`;
+}
+
+async function init() {
+  document.getElementById('load-time').textContent = new Date().toLocaleString('en-CA', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+  });
+
+  // Load team config, then fetch each team's status
+  const grid = document.getElementById('team-grid');
+  grid.innerHTML = '';
+
+  let teams;
+  try {
+    const config = await fetchJSON('data/teams.json');
+    teams = config.teams;
+  } catch {
+    grid.innerHTML = '<p class="load-error" role="alert">Could not load team config (data/teams.json).</p>';
+    return;
+  }
+
+  for (const team of teams) {
+    if (!team.status_url) {
+      grid.insertAdjacentHTML('beforeend', renderPendingCard(team));
+      continue;
+    }
+    try {
+      const data = await fetchJSON(team.status_url);
+      grid.insertAdjacentHTML('beforeend', renderTeamCard(data, team.color));
+    } catch {
+      grid.insertAdjacentHTML('beforeend',
+        `<article class="team-card" role="listitem">
+           <div class="team-card-bar" style="background:${esc(team.color)}"></div>
+           <div class="team-card-body">
+             <div class="team-name">${esc(team.name)}</div>
+             <p class="load-error" role="alert">Could not load status — check the URL in data/teams.json.</p>
+           </div>
+         </article>`);
+    }
+  }
+
+  // Roadmap
+  const rail = document.getElementById('roadmap-rail');
+  try {
+    const roadmap = await fetchJSON('data/roadmap.json');
+    rail.innerHTML = roadmap.phases.map(renderPhase).join('');
+  } catch {
+    rail.innerHTML = '<p class="load-error" role="alert">Roadmap unavailable</p>';
+  }
+
+  // Updates
+  const updatesList = document.getElementById('updates-list');
+  try {
+    const updates = await fetchJSON('data/updates.json');
+    if (updates.updates?.length) {
+      updatesList.innerHTML = [...updates.updates].reverse().map(renderUpdate).join('');
+    } else {
+      updatesList.innerHTML = '<p class="loading">No updates posted yet.</p>';
+    }
+  } catch {
+    updatesList.innerHTML = '<p class="load-error" role="alert">Updates unavailable</p>';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
