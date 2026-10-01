@@ -1,0 +1,32 @@
+{
+  "decisions": [
+    {
+      "date": "2026-10-01",
+      "week": 1,
+      "made_by": "Glenn Lewis",
+      "decision": "Hub coordination system adopted — each team maintains status.json and feed.json in their own repo.",
+      "rationale": "Avoids monorepo merge conflicts. Each team owns their data. Hub reads externally via raw.githubusercontent.com."
+    },
+    {
+      "date": "2026-10-01",
+      "week": 1,
+      "made_by": "Class (Padlet)",
+      "decision": "Design North Star: Consistent · Accessible · Mobile-First · Readable · Standards-Based.",
+      "rationale": "Agreed via Padlet discussion. Accessibility first — build it in from the start, not retrofitted."
+    },
+    {
+      "date": "2026-10-01",
+      "week": 1,
+      "made_by": "Class (Padlet)",
+      "decision": "Quiz inputs use shadcn RadioGroup inside Fieldset + Legend — no custom clickable cards.",
+      "rationale": "Native inputs work with screen readers by default. Custom cards require manual ARIA with more failure points."
+    },
+    {
+      "date": "2026-10-01",
+      "week": 1,
+      "made_by": "Team agreement",
+      "decision": "Done means: working code + documented + accessibility checked with Edward + handoff-ready.",
+      "rationale": "Week 9 switch requires the incoming team to pick up cold. High bar now prevents crisis then."
+    }
+  ]
+}

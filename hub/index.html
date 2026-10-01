@@ -18,6 +18,7 @@
   --accent:#e96c5a;
   --t1:#3b82f6;--t2:#8b5cf6;--t3:#10b981;--t4:#f59e0b;--t5:#e96c5a;
   --stale:#92400e;--stale-border:#b45309;
+  --health-green:#10b981;--health-yellow:#f59e0b;--health-red:#ef4444;
 }
 body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:4rem}
 a{color:inherit;text-decoration:none}
@@ -63,6 +64,45 @@ button{cursor:pointer;font-family:inherit}
 .item-list.blockers li::before{color:#f87171}
 .team-updated{font-size:.65rem;color:var(--text-muted);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
 .team-notes{font-size:.75rem;color:var(--text-dim);font-style:italic;margin-top:.5rem;padding:.5rem .65rem;background:rgba(255,255,255,.03);border-left:2px solid var(--border-mid);border-radius:0 4px 4px 0}
+/* ── Health dot ── */
+.health-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;display:inline-block}
+.health-green{background:#10b981}.health-yellow{background:#f59e0b}.health-red{background:#ef4444}
+/* ── Handoff checklist ── */
+.handoff-toggle{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);background:none;border:none;padding:0;cursor:pointer;margin-top:.7rem;display:flex;align-items:center;gap:.3rem;font-family:inherit}
+.handoff-toggle:hover{color:var(--text-dim)}
+.handoff-list{list-style:none;padding:0;margin-top:.4rem;display:none}
+.handoff-list.open{display:block}
+.handoff-list li{font-size:.74rem;color:var(--text-dim);padding:.18rem 0;display:flex;align-items:center;gap:.5rem}
+.handoff-check{width:11px;height:11px;border-radius:2px;border:1px solid var(--border-mid);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:7px}
+.handoff-check.checked{background:#10b981;border-color:#10b981;color:#fff}
+.handoff-progress{height:3px;background:var(--border);border-radius:2px;margin-top:.4rem;overflow:hidden}
+.handoff-bar{height:100%;background:#10b981;border-radius:2px}
+/* ── Milestone bar ── */
+.ms-bar-wrap{margin-top:.4rem}
+.ms-bar-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:.2rem}
+.ms-bar-fill{height:100%;background:var(--accent);border-radius:2px}
+.ms-bar-label{font-size:.62rem;color:var(--text-muted)}
+/* ── Countdown ── */
+.countdown{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;margin-left:.35rem;vertical-align:middle}
+.c-ok{background:rgba(16,185,129,.15);color:#10b981}
+.c-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+.c-late{background:rgba(239,68,68,.15);color:#ef4444}
+/* ── Decision log ── */
+.decision-card{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:.8rem 1rem;margin-bottom:.5rem}
+.decision-meta{display:flex;gap:.5rem;flex-wrap:wrap;align-items:baseline;margin-bottom:.3rem}
+.decision-by{font-size:.7rem;font-weight:700;color:var(--text-dim)}
+.decision-date{font-size:.65rem;color:var(--text-muted)}
+.decision-text{font-size:.82rem;color:var(--text);margin-bottom:.25rem;line-height:1.5}
+.decision-rationale{font-size:.74rem;color:var(--text-dim);font-style:italic;line-height:1.45}
+/* ── Retro ── */
+.retro-box{margin-top:.65rem;padding:.6rem .8rem;background:rgba(255,255,255,.025);border-radius:6px;border:1px solid var(--border)}
+.retro-head{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.35rem}
+.retro-cols{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.retro-col-head{font-size:.65rem;font-weight:700;margin-bottom:.25rem}
+.retro-list{list-style:none;padding:0}
+.retro-list li{font-size:.74rem;color:var(--text-dim);padding:.12rem 0;padding-left:.8rem;position:relative;line-height:1.4}
+.retro-list.well li::before{content:"✓";position:absolute;left:0;color:#10b981;font-size:.65rem}
+.retro-list.improve li::before{content:"△";position:absolute;left:0;color:#f59e0b;font-size:.65rem}
 .pending-card{opacity:.65}
 .pending-owner{font-size:.72rem;color:var(--text-muted);font-style:italic;margin-bottom:.6rem}
 .pending-msg{font-size:.74rem;color:var(--text-muted);margin-top:.5rem;line-height:1.5}
@@ -142,6 +182,14 @@ footer{text-align:center;font-size:.65rem;color:#3d5467;margin-top:2rem}
     <div class="section-label" id="teams-heading">Team Status</div>
     <div class="team-grid" id="team-grid" role="list" aria-live="polite" aria-label="Team status cards">
       <p class="loading">Loading…</p>
+    </div>
+  </section>
+
+  <!-- ── Decision Log ── -->
+  <section class="section" aria-labelledby="decisions-heading">
+    <div class="section-label" id="decisions-heading">Decision Log</div>
+    <div id="decisions-list" aria-live="polite">
+      <p class="loading">Loading decisions…</p>
     </div>
   </section>
 
@@ -255,6 +303,77 @@ function statusBadge(s) {
   return `<span class="status-badge s-${esc(s)}">${esc(STATUS_LABEL[s] ?? s)}</span>`;
 }
 
+function healthDot(h) {
+  if (!h) return '';
+  const cls = h === 'green' ? 'health-green' : h === 'yellow' ? 'health-yellow' : 'health-red';
+  const label = h === 'green' ? 'Healthy' : h === 'yellow' ? 'Needs attention' : 'At risk';
+  return `<span class="health-dot ${cls}" title="${label}" aria-label="Team health: ${label}"></span>`;
+}
+
+function countdown(dueDateStr) {
+  if (!dueDateStr) return '';
+  const days = Math.ceil((new Date(dueDateStr) - Date.now()) / 86400000);
+  const cls = days > 14 ? 'c-ok' : days > 5 ? 'c-warn' : 'c-late';
+  const label = days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? 'Due today' : `${days}d left`;
+  return `<span class="countdown ${cls}" aria-label="${label}">${label}</span>`;
+}
+
+function milestoneBar(milestones) {
+  if (!milestones?.length) return '';
+  const done = milestones.filter(m => m.completed).length;
+  const pct = Math.round((done / milestones.length) * 100);
+  return `<div class="ms-bar-wrap" aria-label="${done} of ${milestones.length} milestones complete">
+    <div class="ms-bar-track"><div class="ms-bar-fill" style="width:${pct}%"></div></div>
+    <div class="ms-bar-label">${done} of ${milestones.length} milestones</div>
+  </div>`;
+}
+
+function renderHandoffChecklist(items, teamIdx) {
+  if (!items?.length) return '';
+  const done = items.filter(i => i.done).length;
+  const pct = Math.round((done / items.length) * 100);
+  const id = `hc-${teamIdx}`;
+  const listHtml = items.map(i => `
+    <li class="${i.done ? 'done-item' : ''}">
+      <span class="handoff-check ${i.done ? 'checked' : ''}" aria-hidden="true">${i.done ? '✓' : ''}</span>
+      ${esc(i.item)}
+    </li>`).join('');
+  return `
+    <button class="handoff-toggle" onclick="document.getElementById('${id}').classList.toggle('open');this.textContent=(this.textContent.includes('▸')?'▾ ':'▸ ')+'Handoff (${done}/${items.length})'">
+      ▸ Handoff (${done}/${items.length})
+    </button>
+    <div class="handoff-progress"><div class="handoff-bar" style="width:${pct}%"></div></div>
+    <ul class="handoff-list" id="${id}" role="list">${listHtml}</ul>`;
+}
+
+function renderDecision(d) {
+  return `<article class="decision-card" aria-label="Decision: ${esc(d.decision)}">
+    <div class="decision-meta">
+      <span class="decision-by">${esc(d.made_by)}</span>
+      <span class="decision-date">Week ${esc(String(d.week))} · ${esc(d.date)}</span>
+    </div>
+    <p class="decision-text">${esc(d.decision)}</p>
+    ${d.rationale ? `<p class="decision-rationale">${esc(d.rationale)}</p>` : ''}
+  </article>`;
+}
+
+function renderRetro(retro) {
+  if (!retro) return '';
+  const well = retro.went_well?.length
+    ? `<ul class="retro-list well" role="list">${retro.went_well.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`
+    : '<p style="font-size:.74rem;color:var(--text-muted)">None logged</p>';
+  const improve = retro.improve?.length
+    ? `<ul class="retro-list improve" role="list">${retro.improve.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`
+    : '<p style="font-size:.74rem;color:var(--text-muted)">None logged</p>';
+  return `<div class="retro-box">
+    <div class="retro-head">Sprint Retro</div>
+    <div class="retro-cols">
+      <div><div class="retro-col-head" style="color:#10b981">Went well</div>${well}</div>
+      <div><div class="retro-col-head" style="color:#f59e0b">Improve</div>${improve}</div>
+    </div>
+  </div>`;
+}
+
 function itemList(arr, cls = '') {
   if (!arr?.length) return '';
   return `<ul class="item-list ${cls}" role="list">${arr.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`;
@@ -271,6 +390,7 @@ function renderTeamCard(data, team) {
         <div class="team-owner">${esc(data.owner)}</div>
         <div class="status-row">
           ${statusBadge(data.status)}
+          ${healthDot(data.health)}
           ${stale ? '<span class="stale-badge" role="alert">Stale</span>' : ''}
         </div>
         ${data.done?.length      ? `<div class="team-section-head">Done</div>${itemList(data.done)}`               : ''}
@@ -278,6 +398,7 @@ function renderTeamCard(data, team) {
         ${data.next?.length      ? `<div class="team-section-head">Up next</div>${itemList(data.next)}`            : ''}
         ${data.blockers?.length  ? `<div class="team-section-head">Blockers</div>${itemList(data.blockers, 'blockers')}` : ''}
         ${data.notes             ? `<p class="team-notes">${esc(data.notes)}</p>`                                  : ''}
+        ${renderHandoffChecklist(data.handoff_checklist, team.id)}
         <div class="team-updated">Week ${esc(String(data.week ?? '—'))} · ${esc(relTime(data.updated))}</div>
       </div>
     </article>`;
@@ -317,10 +438,11 @@ function renderFeedEntry(entry, color, isLast) {
 function renderPhase(p) {
   return `
     <article class="phase${p.status === 'in_progress' ? ' active' : ''}" role="listitem" aria-label="Phase: ${esc(p.name)}">
-      <div class="phase-weeks">Weeks ${esc(p.weeks)}</div>
+      <div class="phase-weeks">Weeks ${esc(p.weeks)}${countdown(p.due_date)}</div>
       <div class="phase-name">${esc(p.name)}</div>
       <div class="phase-desc">${esc(p.description)}</div>
       <span class="phase-status s-${esc(p.status)}">${esc(STATUS_LABEL[p.status] ?? p.status)}</span>
+      ${milestoneBar(p.milestones)}
     </article>`;
 }
 
@@ -341,6 +463,7 @@ function renderUpdate(u) {
       ${videoBtn}
       <p class="update-summary">${esc(u.summary)}</p>
       ${decisions}
+      ${renderRetro(u.retro)}
     </article>`;
 }
 
@@ -505,6 +628,18 @@ async function loadAll() {
 
   /* ── Board tabs ── */
   buildBoardTabs(teams);
+
+  /* ── Decision log ── */
+  const decisionsEl = document.getElementById('decisions-list');
+  try {
+    const dec = await fetchJSON('data/decisions.json');
+    decisionsEl.innerHTML = dec.decisions?.length
+      ? [...dec.decisions].reverse().map(renderDecision).join('')
+      : '<p class="loading">No decisions logged yet.</p>';
+  } catch (e) {
+    console.warn('Decisions load failed:', e);
+    decisionsEl.innerHTML = '<p class="load-error" role="alert">Decisions unavailable.</p>';
+  }
 
   /* ── Roadmap ── */
   const rail = document.getElementById('roadmap-rail');

@@ -3,10 +3,19 @@
   "owner": "Glenn Lewis",
   "week": 1,
   "status": "in_progress",
-  "done": ["Repo scaffolded", "Hub dashboard built", "Coordination plan written"],
+  "health": "green",
+  "done": ["Repo scaffolded", "Hub dashboard built", "Coordination plan written", "GitHub Pages deployed", "Giscus board live"],
   "in_progress": ["Reviewing occupation data files", "Designing before/after comparison view"],
   "next": ["Coordinate with Team 3 on match output format", "Sketch wage/outlook data display"],
   "blockers": ["Waiting on instructor data files", "Waiting on Team 3 match output shape"],
   "notes": "Component consumes Team 3's match results. Need to agree on data contract before building display logic.",
+  "handoff_checklist": [
+    { "item": "README updated with setup instructions", "done": false },
+    { "item": "Runs on fresh clone without errors", "done": false },
+    { "item": "No console errors in production", "done": false },
+    { "item": "Accessibility reviewed with Edward Laba", "done": false },
+    { "item": "Data contract documented in hub", "done": false },
+    { "item": "Component works with sample data from Team 3", "done": false }
+  ],
   "updated": "2026-10-01"
 }

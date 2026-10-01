@@ -10,7 +10,11 @@
         "Each team owns their folder — no PRs touching other team folders",
         "Team 3 to define match output data shape by Week 2 so Teams 4 and 5 can plan against it",
         "Weekly update video posted each Monday"
-      ]
+      ],
+      "retro": {
+        "went_well": ["Hub deployed same day as team assignment", "Design system agreed via Padlet before build started"],
+        "improve": ["Need all teams connected to the hub ASAP", "Data contract between Team 3 and Teams 4/5 must be resolved in Week 2"]
+      }
     }
   ]
 }
