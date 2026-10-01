@@ -153,6 +153,27 @@ button{cursor:pointer;font-family:inherit}
 .video-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:.3rem .7rem;margin-bottom:.65rem;opacity:.7}
 .video-link:hover{opacity:1}
 
+/* ── Data contracts ── */
+.contract-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem}
+.contract-header{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.4rem}
+.contract-flow{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.contract-team{font-size:.78rem;font-weight:700}
+.contract-arrow{font-size:.75rem;color:var(--text-muted)}
+.contract-status{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .5rem;border-radius:20px;margin-left:auto}
+.cs-draft{background:rgba(107,132,153,.2);color:var(--text-muted)}
+.cs-agreed{background:rgba(16,185,129,.15);color:#10b981}
+.cs-changed{background:rgba(245,158,11,.15);color:#f59e0b}
+.cs-deprecated{background:rgba(239,68,68,.1);color:#ef4444}
+.contract-desc{font-size:.78rem;color:var(--text-dim);margin-bottom:.5rem;line-height:1.5}
+.contract-version{font-size:.65rem;color:var(--text-muted);margin-bottom:.5rem}
+.schema-table{width:100%;border-collapse:collapse;font-size:.75rem}
+.schema-table th{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:.3rem .5rem;border-bottom:1px solid var(--border);text-align:left}
+.schema-table td{padding:.3rem .5rem;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.schema-table tr:last-child td{border-bottom:none}
+.schema-field{font-family:monospace;color:var(--text);font-size:.72rem}
+.schema-type{font-family:monospace;color:#60a5fa;font-size:.72rem}
+.schema-example{font-family:monospace;color:#34d399;font-size:.7rem}
+
 /* ── Misc ── */
 .loading{color:var(--text-muted);font-size:.8rem;padding:.5rem 0}
 .load-error{color:#f87171;font-size:.75rem;padding:.4rem 0}
@@ -206,6 +227,14 @@ footer{text-align:center;font-size:.65rem;color:#3d5467;margin-top:2rem}
     <div class="section-label" id="board-heading">Team Board</div>
     <div class="board-tabs" role="tablist" aria-label="Team boards" id="board-tabs"></div>
     <div class="board-panel" id="board-panel" role="tabpanel"></div>
+  </section>
+
+  <!-- ── Data Contracts ── -->
+  <section class="section" aria-labelledby="contracts-heading">
+    <div class="section-label" id="contracts-heading">Data Contracts</div>
+    <div id="contracts-list" aria-live="polite">
+      <p class="loading">Loading contracts…</p>
+    </div>
   </section>
 
   <!-- ── Roadmap ── -->
@@ -344,6 +373,34 @@ function renderHandoffChecklist(items, teamIdx) {
     </button>
     <div class="handoff-progress"><div class="handoff-bar" style="width:${pct}%"></div></div>
     <ul class="handoff-list" id="${id}" role="list">${listHtml}</ul>`;
+}
+
+function renderContract(c) {
+  const statusCls = { draft:'cs-draft', agreed:'cs-agreed', changed:'cs-changed', deprecated:'cs-deprecated' }[c.status] ?? 'cs-draft';
+  const rows = c.schema?.map(f => `
+    <tr>
+      <td><span class="schema-field">${esc(f.field)}</span></td>
+      <td><span class="schema-type">${esc(f.type)}</span></td>
+      <td><span class="schema-example">${esc(f.example)}</span></td>
+      <td>${esc(f.notes)}</td>
+    </tr>`).join('') ?? '';
+  return `
+    <article class="contract-card" aria-label="Contract: ${esc(c.producer.name)} to ${esc(c.consumer.name)}">
+      <div class="contract-header">
+        <div class="contract-flow">
+          <span class="contract-team">${esc(c.producer.name)}</span>
+          <span class="contract-arrow">→</span>
+          <span class="contract-team">${esc(c.consumer.name)}</span>
+        </div>
+        <span class="contract-status ${statusCls}">${esc(c.status)}</span>
+      </div>
+      <p class="contract-desc">${esc(c.description)}</p>
+      <p class="contract-version">v${esc(c.version)} · updated ${esc(c.updated)}</p>
+      ${rows ? `<table class="schema-table" aria-label="Schema fields">
+        <thead><tr><th>Field</th><th>Type</th><th>Example</th><th>Notes</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>` : ''}
+    </article>`;
 }
 
 function renderDecision(d) {
@@ -628,6 +685,18 @@ async function loadAll() {
 
   /* ── Board tabs ── */
   buildBoardTabs(teams);
+
+  /* ── Data contracts ── */
+  const contractsEl = document.getElementById('contracts-list');
+  try {
+    const con = await fetchJSON('data/contracts.json');
+    contractsEl.innerHTML = con.contracts?.length
+      ? con.contracts.map(renderContract).join('')
+      : '<p class="loading">No contracts defined yet.</p>';
+  } catch (e) {
+    console.warn('Contracts load failed:', e);
+    contractsEl.innerHTML = '<p class="load-error" role="alert">Contracts unavailable.</p>';
+  }
 
   /* ── Decision log ── */
   const decisionsEl = document.getElementById('decisions-list');

@@ -1,0 +1,51 @@
+{
+  "contracts": [
+    {
+      "id": "c1",
+      "producer": { "team": "team2-profile", "name": "Profile & Intake" },
+      "consumer": { "team": "team3-matching", "name": "Career Matching" },
+      "description": "User profile data passed from intake form to matching engine.",
+      "status": "draft",
+      "version": "0.1",
+      "updated": "2026-10-01",
+      "schema": [
+        { "field": "skills", "type": "string[]", "example": "[\"javascript\", \"design\"]", "notes": "Selected skill IDs from intake form" },
+        { "field": "interests", "type": "string[]", "example": "[\"healthcare\", \"tech\"]", "notes": "Selected interest categories" },
+        { "field": "education", "type": "string", "example": "\"diploma\"", "notes": "Highest completed education level" },
+        { "field": "experience_years", "type": "number", "example": "2", "notes": "Years of work experience, 0 if none" }
+      ]
+    },
+    {
+      "id": "c2",
+      "producer": { "team": "team3-matching", "name": "Career Matching" },
+      "consumer": { "team": "team4-nextstep", "name": "Next Step" },
+      "description": "Top career matches passed to the next step recommendation engine.",
+      "status": "draft",
+      "version": "0.1",
+      "updated": "2026-10-01",
+      "schema": [
+        { "field": "matches", "type": "Match[]", "example": "See Match type below", "notes": "Ordered array, best match first" },
+        { "field": "matches[].noc_code", "type": "string", "example": "\"21232\"", "notes": "NOC occupation code for Job Bank lookup" },
+        { "field": "matches[].title", "type": "string", "example": "\"Web Designer\"", "notes": "Occupation display name" },
+        { "field": "matches[].score", "type": "number", "example": "0.87", "notes": "Match confidence 0–1" },
+        { "field": "matches[].why", "type": "string", "example": "\"Matched on JavaScript and design interest\"", "notes": "One-line match reason for UI display" }
+      ]
+    },
+    {
+      "id": "c3",
+      "producer": { "team": "team3-matching", "name": "Career Matching" },
+      "consumer": { "team": "team5-lookforward", "name": "Lookforward & Outcome" },
+      "description": "Match results plus occupation data used to project before/after outcomes.",
+      "status": "draft",
+      "version": "0.1",
+      "updated": "2026-10-01",
+      "schema": [
+        { "field": "matches", "type": "Match[]", "example": "Same as c2", "notes": "Top 3 matches minimum required" },
+        { "field": "matches[].noc_code", "type": "string", "example": "\"21232\"", "notes": "Used to pull wage and outlook data from shared/data/" },
+        { "field": "matches[].median_wage", "type": "number", "example": "28.50", "notes": "Hourly median wage from occupation data file" },
+        { "field": "matches[].outlook", "type": "string", "example": "\"good\"", "notes": "Employment outlook: good / moderate / limited" },
+        { "field": "matches[].education_required", "type": "string", "example": "\"College diploma\"", "notes": "Minimum education for the occupation" }
+      ]
+    }
+  ]
+}
